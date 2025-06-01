@@ -1,5 +1,243 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: false
 ---
+# Immediate Action Plan - Photo Wall Planner MCP Efficiency
+
+## **🔥 HIGHEST PRIORITY: Missing Frontend Pages (Task 11)**
+
+### **Immediate Actions Required**
+```typescript
+// 1. Check current task status
+mcp_task-master-ai_get_task({ id: "11" })
+
+// 2. Get Next.js 15 documentation
+mcp_context7_resolve-library-id({ libraryName: "next.js" })
+mcp_context7_get-library-docs({ 
+  context7CompatibleLibraryID: "/vercel/next.js/v15.0.0",
+  topic: "app_router_pages"
+})
+
+// 3. Create missing pages using file operations
+// Create: app/projects/page.tsx, app/layouts/page.tsx, app/photos/page.tsx, app/signup/page.tsx
+```
+
+### **Expected Result**: All navigation links work, no more 404 errors
+
+## **⚡ HIGH PRIORITY: Supabase Backend Setup (Task 1.5, Task 2)**
+
+### **Immediate Actions Required**
+```typescript
+// 1. Create new Supabase project for photo wall planner
+mcp_supabase_get_cost({ 
+  type: "project", 
+  organization_id: "vpotxkyyhyxdhxkavsqc" 
+})
+
+mcp_supabase_confirm_cost({ 
+  type: "project", 
+  recurrence: "monthly", 
+  amount: 0 // Free tier
+})
+
+// 2. Create project
+mcp_supabase_create_project({
+  name: "photo-wall-planner",
+  organization_id: "vpotxkyyhyxdhxkavsqc",
+  region: "us-east-1",
+  confirm_cost_id: "confirmation_id"
+})
+
+// 3. Set up initial database schema
+mcp_supabase_apply_migration({
+  project_id: "new_project_id",
+  name: "initial_schema",
+  query: `
+    CREATE TABLE users (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      email TEXT UNIQUE NOT NULL,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    
+    CREATE TABLE projects (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id UUID REFERENCES users(id),
+      name TEXT NOT NULL,
+      status TEXT DEFAULT 'draft',
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    
+    CREATE TABLE frames (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      project_id UUID REFERENCES projects(id),
+      type TEXT NOT NULL, -- '4x6 Black', '5x7 White', '8x10 Natural Wood'
+      quantity INTEGER DEFAULT 1,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    
+    CREATE TABLE photos (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      project_id UUID REFERENCES projects(id),
+      frame_id UUID REFERENCES frames(id),
+      url TEXT,
+      metadata JSONB,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+  `
+})
+```
+
+### **Expected Result**: Backend database ready for integration
+
+## **🎯 MEDIUM PRIORITY: Frame Backend Integration (Task 4.4)**
+
+### **Immediate Actions Required**
+```typescript
+// 1. Update task with current status
+mcp_task-master-ai_update_task({
+  id: "4",
+  prompt: "Frontend complete. Ready for backend integration with new Supabase project."
+})
+
+// 2. Create API routes for frame management
+// Next.js API routes: app/api/frames/route.ts
+// Connect to Supabase client
+```
+
+### **Expected Result**: Frame inventory data persists to database
+
+## **📋 CURRENT SESSION MCP WORKFLOW**
+
+### **1. Start Development Session**
+```typescript
+// Always start with task management
+mcp_task-master-ai_get_tasks({ projectRoot: "/Users/Andy/Documents/Workspace/photo-wall-planner" })
+mcp_task-master-ai_next_task({ projectRoot: "/Users/Andy/Documents/Workspace/photo-wall-planner" })
+```
+
+### **2. Development Loop**
+```typescript
+// For each task:
+// A. Research (if needed)
+mcp_context7_get-library-docs({ /* relevant library */ })
+
+// B. Implement changes
+// Use file operations, API calls, etc.
+
+// C. Test changes
+mcp_playwright-mcp_browser_navigate({ url: "http://localhost:3000" })
+mcp_playwright-mcp_browser_snapshot({})
+
+// D. Update task progress
+mcp_task-master-ai_update_subtask({
+  id: "subtask_id",
+  prompt: "Implementation details and progress notes"
+})
+
+// E. Mark complete when done
+mcp_task-master-ai_set_task_status({
+  id: "task_id",
+  status: "done"
+})
+```
+
+### **3. Monitor & Audit**
+```typescript
+// Regular monitoring
+mcp_browser-tools_runAuditMode({})
+mcp_browser-tools_getNetworkLogs({})
+mcp_supabase_get_logs({ project_id: "new_project_id", service: "api" })
+```
+
+## **🚀 RECOMMENDED MCP ADDITIONS FOR THIS SESSION**
+
+### **Add Memory Tool (High Priority)**
+```bash
+# Add to .cursor/mcp.json
+"memory-tool": {
+  "command": "npx",
+  "args": ["-y", "@mem0ai/mem0-memory-mcp@latest"]
+}
+```
+
+**Use for**: Storing Supabase connection details, page templates, user preferences
+
+### **Add Desktop Commander (High Priority)**
+```bash
+# Add to .cursor/mcp.json  
+"desktop-commander": {
+  "command": "npx",
+  "args": ["-y", "@wonderwhy-er/desktop-commander@latest"]
+}
+```
+
+**Use for**: Creating missing page files, managing project structure
+
+## **⏱️ ESTIMATED TIMELINE**
+
+### **Next 2 Hours**
+- ✅ Create missing frontend pages (Task 11)
+- ✅ Set up Supabase project (Task 1.5)
+- ✅ Basic authentication setup (Task 2.1)
+
+### **Next 4 Hours**  
+- ✅ Frame inventory backend integration (Task 4.4)
+- ✅ Basic project management API (Task 3.1-3.3)
+- ✅ Test all integrations
+
+### **Next 8 Hours**
+- ✅ Photo upload with Vercel Blob (Task 7.1)
+- ✅ Layout algorithm backend (Task 5.2-5.3)
+- ✅ Complete testing coverage
+
+## **🎯 SUCCESS METRICS**
+
+### **End of Session Goals**
+1. **No 404 errors** - All navigation pages exist and render
+2. **Supabase connected** - Database queries work from frontend
+3. **Frame data persists** - Add/edit frames saves to database
+4. **Basic auth works** - User can sign up and login
+5. **All MCPs functional** - No MCP tool errors
+
+### **Testing Checklist**
+```typescript
+// Use Playwright MCP to verify:
+// ✅ All pages load without 404
+// ✅ Frame inventory form saves data
+// ✅ Supabase auth flow works
+// ✅ Navigation between pages works
+// ✅ No console errors
+```
+
+## **🔧 TROUBLESHOOTING**
+
+### **Common MCP Issues**
+- **Supabase**: Check API keys in `.cursor/mcp.json` env section
+- **Context7**: Use exact library names from registry
+- **Playwright**: Ensure dev server is running on localhost:3000
+- **Task Master**: Use absolute project root path
+
+### **Fallback Commands**
+- If MCP fails: Use terminal commands as backup
+- If Supabase MCP fails: Use Supabase CLI directly
+- If file operations fail: Use standard file operations
+
+## **📝 SESSION NOTES TEMPLATE**
+
+```typescript
+// Track progress using Task Master MCP
+mcp_task-master-ai_update_subtask({
+  id: "current_subtask",
+  prompt: `
+Session Progress:
+- ✅ Created missing pages: /projects, /layouts, /photos, /signup
+- ✅ Set up Supabase project: ${project_id}
+- 🔄 Working on: Frame backend integration
+- ❌ Blocked by: API key configuration
+- 📝 Next: Test authentication flow
+  `
+})
+```
+
+Start with **Task 11 (Missing Pages)** - it's the quickest win and unblocks navigation testing!
