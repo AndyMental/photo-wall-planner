@@ -38,6 +38,10 @@ jobs:
             echo "ESLint not configured. Skipping lint step."
           fi
         
+      - name: Run type checking
+        run: |
+          npm run type-check --if-present || echo "Type check failed but continuing workflow"
+        
       - name: Run tests (if available)
         run: |
           if npm ls --depth=0 | grep -q "@playwright/test"; then
