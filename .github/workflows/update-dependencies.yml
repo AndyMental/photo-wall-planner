@@ -1,0 +1,54 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly at midnight on Sunday
+  workflow_dispatch:     # Allow manual triggering
+
+jobs:
+  update-deps:
+    runs-on: ubuntu-latest
+    name: Update Dependencies
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Update package-lock.json
+        run: |
+          # Remove the existing lock file
+          rm -f package-lock.json
+          
+          # Install dependencies twice to ensure proper synchronization
+          npm install --package-lock-only
+          npm install --package-lock-only
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet package-lock.json; then
+            echo "No changes detected in package-lock.json"
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected in package-lock.json"
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update package-lock.json"
+          title: "chore: update package-lock.json"
+          body: |
+            This PR updates the package-lock.json file to ensure it is in sync with package.json.
+            
+            This update was automatically created by the Update Dependencies workflow.
+          branch: update-package-lock
+          delete-branch: true 
