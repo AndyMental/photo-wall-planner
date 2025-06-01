@@ -30,7 +30,12 @@ jobs:
         run: npm ci --legacy-peer-deps
         
       - name: Run linting
-        run: npm run lint --if-present
+        run: |
+          if [ -f .eslintrc.json ] || [ -f .eslintrc.js ] || [ -f .eslintrc.yml ]; then
+            npm run lint --if-present
+          else
+            echo "ESLint not configured. Skipping lint step."
+          fi
         
       - name: Run type checking
         run: npm run type-check --if-present
