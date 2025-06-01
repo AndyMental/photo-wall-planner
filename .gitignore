@@ -58,3 +58,7 @@ tasks/
 .continue/
 .replit
 .replit.* 
+
+# Playwright test reports
+playwright-report/
+test-results/ 
