@@ -68,6 +68,20 @@ npm run lint
 - **Preview**: Push to `develop` or `feature/*` branches
 - **PR Previews**: Automatic deployment for pull requests
 
+### GitHub Actions Workflows
+- **Development Workflow** (`.github/workflows/dev-deployment.yml`):
+  - Triggers on pushes to `develop` and `feature/*` branches
+  - Runs tests, linting, and type checking
+  - Deploys to Vercel preview environment
+  - Performs smoke tests on deployed preview
+  - Runs E2E tests against deployed preview (only on `develop` branch)
+
+- **Production Workflow** (`.github/workflows/vercel-deploy.yml`):
+  - Triggers on pushes to `main` branch, PR to `main`, and pushes to `develop`
+  - Builds and deploys to Vercel (production for `main`, preview for others)
+  - Comments on PRs with deployment URLs
+  - Runs Lighthouse audits on PR deployments
+
 ### Manual Deployment
 ```bash
 # Deploy preview
@@ -79,6 +93,7 @@ npm run deploy:prod
 
 ### Environment Setup
 See [Deployment Setup Guide](./docs/deployment-setup.md) for complete GitHub Actions + Vercel configuration.
+For detailed workflow validation see [Deployment Validation](./docs/deployment-validation.md).
 
 ## 🧪 Testing
 

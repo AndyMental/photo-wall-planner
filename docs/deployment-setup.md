@@ -1,180 +1,105 @@
 # Deployment Setup Guide
 
-## 🚀 GitHub Actions + Vercel Deployment
+*Last updated: June 5, 2024*
 
-This project uses GitHub Actions for automated CI/CD with Vercel deployments.
+This guide provides instructions for setting up the GitHub Actions workflow for automated deployments to Vercel for both development and production environments.
 
-### Required GitHub Secrets
+## Prerequisites
 
-You need to add these secrets to your GitHub repository:
+Before setting up GitHub Actions for Vercel deployments, you need:
 
-#### 1. Go to Repository Settings
-- Navigate to your GitHub repository
-- Go to **Settings** → **Secrets and variables** → **Actions**
-- Click **New repository secret**
+1. A Vercel account
+2. A project created in Vercel
+3. Admin access to the GitHub repository
 
-#### 2. Add Required Secrets
+## Required Secrets
 
-```bash
-# Vercel Authentication Token
-VERCEL_TOKEN=b8dSiQk2tziU7njlMbAEAoln
+The following GitHub secrets must be configured in your repository settings:
 
-# Vercel Organization ID (Team ID)
-VERCEL_ORG_ID=team_eKdasPGx5AtvcEG6lUar1NAO
+| Secret Name | Description | How to Obtain |
+|-------------|-------------|---------------|
+| `VERCEL_TOKEN` | API token for authenticating with Vercel | Generate from Vercel Dashboard → Settings → Tokens |
+| `VERCEL_ORG_ID` | Your Vercel organization/team ID | Found in Vercel Dashboard → Settings → General → Your ID |
+| `VERCEL_PROJECT_ID` | The ID of your Vercel project | Found in Project Settings → General → Project ID |
 
-# Vercel Project ID
-VERCEL_PROJECT_ID=prj_xVAphagKgur02Wcec56mgkBKzAW9
-```
+## Setup Steps
 
-### 📋 How to Get These Values
+1. **Get Vercel API Token**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Navigate to Settings → Tokens
+   - Create a new token with an appropriate name (e.g., "GitHub Actions Deploy")
+   - Copy the token value immediately (it won't be shown again)
 
-#### Getting VERCEL_TOKEN
-- Already configured in your MCP setup: `b8dSiQk2tziU7njlMbAEAoln`
+2. **Get Vercel Organization ID**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Navigate to Settings → General
+   - Copy the value under "Your ID"
 
-#### Getting VERCEL_ORG_ID
-- Run: `vercel teams ls` or check the team slug from project details
-- Current value: `team_eKdasPGx5AtvcEG6lUar1NAO`
+3. **Get Vercel Project ID**
+   - Go to your project in Vercel Dashboard
+   - Navigate to Project Settings → General
+   - Copy the value under "Project ID"
 
-#### Getting VERCEL_PROJECT_ID  
-- Run: `vercel project inspect` in your project directory
-- Current value: `prj_xVAphagKgur02Wcec56mgkBKzAW9`
+4. **Add Secrets to GitHub Repository**
+   - Go to your GitHub repository
+   - Navigate to Settings → Secrets and variables → Actions
+   - Add the following repository secrets:
+     - Name: `VERCEL_TOKEN`, Value: [Your Vercel API token]
+     - Name: `VERCEL_ORG_ID`, Value: [Your Vercel organization ID]
+     - Name: `VERCEL_PROJECT_ID`, Value: [Your Vercel project ID]
 
-## 🔄 Deployment Workflows
+5. **Verify GitHub Workflow Files**
+   - Ensure `.github/workflows/dev-deployment.yml` and `.github/workflows/vercel-deploy.yml` exist in your repository
+   - Verify that both files reference the secrets properly with `${{ secrets.SECRET_NAME }}`
+   - Commit and push the workflow files if not already present
 
-### 1. Production Deployment (`main` branch)
-**Trigger:** Push to `main` branch
-```yaml
-✅ Install dependencies
-✅ Run tests (if available)
-✅ Build project
-✅ Deploy to Vercel production
-✅ Update production URL
-```
+## Workflow Customization
 
-### 2. Development Deployment (`develop` branch)
-**Trigger:** Push to `develop` or `feature/*` branches
-```yaml
-✅ Run tests and linting
-✅ Type checking
-✅ Build validation
-✅ Deploy to Vercel preview
-✅ Run smoke tests
-✅ E2E tests (on develop)
-```
+### Development Workflow
 
-### 3. Pull Request Previews
-**Trigger:** Pull requests to `main`
-```yaml
-✅ Deploy preview environment
-✅ Comment PR with preview URL
-✅ Run Lighthouse audit
-✅ Performance/accessibility checks
-```
+The development workflow (`dev-deployment.yml`) is triggered on pushes to `develop` and `feature/*` branches. It runs tests, builds the project, and deploys to a Vercel preview environment.
 
-## 🌐 Environment URLs
+To customize:
+- Modify the trigger branches in the `on.push.branches` section
+- Adjust the Node.js version if needed
+- Add or remove test steps based on your project's requirements
 
-### Production
-- **Primary URL**: `https://photo-wall-planner.vercel.app`
-- **Team URL**: `https://photo-wall-planner-andymentals-projects.vercel.app`
+### Production Workflow
 
-### Development/Preview
-- **Preview URLs**: Generated dynamically per deployment
-- **Branch URLs**: `https://photo-wall-planner-git-{branch}-andymentals-projects.vercel.app`
+The production workflow (`vercel-deploy.yml`) is triggered on pushes to `main` branch and pull requests to `main`. It deploys to Vercel production for `main` branch or preview for other branches.
 
-## 🛠️ Local Development Commands
+To customize:
+- Modify the trigger branches in the `on.push.branches` section
+- Adjust the Node.js version if needed
+- Customize the PR comment format
+- Modify Lighthouse audit configurations in `.lighthouserc.json`
 
-```bash
-# Start development server
-npm run dev
+## Monitoring Deployments
 
-# Pull Vercel environment variables
-npm run vercel:pull
+- View workflow runs in the "Actions" tab of your GitHub repository
+- Check deployment statuses in the Vercel Dashboard
+- For PR deployments, preview links are automatically added as comments
+- Lighthouse audit results are available in the workflow run details
 
-# Run local Vercel dev server  
-npm run vercel:dev
+## Troubleshooting
 
-# Type checking
-npm run type-check
+If deployments fail, check:
+1. GitHub secrets are correctly configured
+2. Workflow files are properly formatted
+3. Repository permissions are set correctly
+4. Vercel project settings (especially environment variables)
+5. Build errors in the workflow run logs
 
-# Run E2E tests
-npm run test:e2e
+## Notes
 
-# Deploy preview manually
-npm run deploy:preview
+- Production deployments (`main` branch) require special care as they affect live users
+- Consider adding approval gates for production deployments
+- Set up branch protection rules for the `main` branch
+- Regularly review and update GitHub secrets (rotate tokens)
 
-# Deploy to production manually
-npm run deploy:prod
-```
+---
 
-## 🔧 Environment Variables
-
-### Local Development
-Create `.env.local` file:
-```bash
-# Pull from Vercel
-npm run vercel:pull
-```
-
-### Production/Preview
-Environment variables are managed through:
-1. **Vercel Dashboard**: For app-specific variables
-2. **GitHub Secrets**: For deployment tokens
-3. **Vercel CLI**: For environment synchronization
-
-## 📊 Quality Checks
-
-### Lighthouse Audits
-Automatically run on PR deployments:
-- **Performance**: Min 80%
-- **Accessibility**: Min 90% (error on fail)
-- **Best Practices**: Min 80%
-- **SEO**: Min 80%
-
-### Testing Pipeline
-- **Unit Tests**: `npm run test` (if present)
-- **Type Checking**: `npm run type-check`
-- **Linting**: `npm run lint`
-- **E2E Tests**: `npm run test:e2e` (on develop)
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Deployment Fails with npm install**
-   - ✅ Fixed with `.npmrc` configuration
-   - Uses `legacy-peer-deps=true`
-
-2. **Missing Environment Variables**
-   - Check GitHub Secrets are properly set
-   - Verify Vercel project connection
-
-3. **Build Failures**
-   - Check Node.js version compatibility (18.x)
-   - Verify TypeScript compilation
-
-4. **Preview URL Not Working**
-   - Wait for deployment to complete (~1-2 minutes)
-   - Check GitHub Actions logs for errors
-
-## 📈 Monitoring
-
-- **Deployment Status**: GitHub Actions tab
-- **Performance**: Vercel Analytics dashboard
-- **Errors**: Vercel Runtime logs
-- **Security**: GitHub Security alerts
-
-## 🔄 Branch Strategy
-
-```
-main (production)
-├── develop (staging/preview)
-│   ├── feature/new-feature
-│   └── feature/bug-fix
-└── hotfix/urgent-fix
-```
-
-### Recommended Workflow
-1. **Feature Development**: Create `feature/*` branch from `develop`
-2. **Testing**: Push to `develop` for preview deployment
-3. **Production**: Merge `develop` → `main` for production deployment
-4. **Hotfixes**: Create `hotfix/*` branch from `main`, merge back to both `main` and `develop` 
+For more information, refer to:
+- [Vercel Documentation](https://vercel.com/docs)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [Deployment Validation Report](./deployment-validation.md) 
