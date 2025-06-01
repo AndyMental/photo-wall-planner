@@ -1,4 +1,4 @@
-name: Deploy to Vercel
+name: Production Deployment & Testing
 
 on:
   push:
@@ -15,7 +15,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy to Vercel
+    name: Deploy to Production
     
     steps:
       - name: Checkout code
