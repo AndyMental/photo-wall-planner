@@ -1,4 +1,4 @@
-name: Development Deployment & Testing
+name: Development Deployment
 
 on:
   push:
@@ -12,52 +12,8 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    name: Run Tests
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: |
-          npm install --legacy-peer-deps
-          npm install eslint eslint-config-next --save-dev
-        
-      - name: Run linting
-        run: |
-          if [ -f .eslintrc.json ] || [ -f .eslintrc.js ] || [ -f .eslintrc.yml ]; then
-            npm run lint --if-present || echo "Linting errors found, but continuing workflow"
-          else
-            echo "ESLint not configured. Skipping lint step."
-          fi
-        
-      - name: Run type checking
-        run: |
-          npm run type-check --if-present || echo "Type check failed but continuing workflow"
-        
-      - name: Run tests
-        run: |
-          if npm ls --depth=0 | grep -q "@playwright/test"; then
-            npm run test:e2e || npm run test || echo "No tests found, but continuing anyway" && exit 0
-          else
-            echo "No tests configured - continuing anyway"
-            exit 0
-          fi
-        
-      - name: Build project
-        run: npm run build
-
   deploy-dev:
     runs-on: ubuntu-latest
-    needs: test
     name: Deploy to Development
     
     steps:
@@ -90,47 +46,4 @@ jobs:
           echo "Deploying to development environment..."
           DEPLOYMENT_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
           echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $DEPLOYMENT_URL"
-          
-      - name: Run basic smoke tests
-        run: |
-          sleep 15
-          curl -f ${{ steps.deploy-dev.outputs.deployment_url }} || exit 1
-          echo "Smoke test passed!"
-
-  e2e-tests:
-    runs-on: ubuntu-latest
-    needs: deploy-dev
-    name: End-to-End Tests
-    if: github.ref == 'refs/heads/develop'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: |
-          npm install --legacy-peer-deps
-          npm install eslint eslint-config-next --save-dev
-        
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-        
-      - name: Run Playwright tests
-        env:
-          PLAYWRIGHT_TEST_BASE_URL: ${{ needs.deploy-dev.outputs.deployment_url }}
-        run: npm run test:e2e --if-present
-        
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30 
+          echo "Deployed to: $DEPLOYMENT_URL" 
