@@ -1,0 +1,160 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# MCP Efficiency Rules for Photo Wall Planner
+
+## **Available MCP Tools**
+
+### **Task Management & Development**
+- **Task Master AI**: Use `mcp_task-master-ai_*` tools for all task management operations
+- **Context7**: Use `mcp_context7_*` for up-to-date documentation and code examples
+- **Browser Tools**: Use `mcp_browser-tools_*` for monitoring and auditing web apps
+- **Playwright MCP**: Use `mcp_playwright-mcp_*` for comprehensive testing and automation
+
+### **Backend & Infrastructure**
+- **Supabase MCP**: Use `mcp_supabase_*` for all database, auth, and backend operations
+- **Vercel MCP**: Use `mcp_vercel_*` for deployment management and monitoring
+- **GitHub MCP**: Use for repository management and automation
+
+## **MCP Workflow Patterns**
+
+### **1. Task Management Workflow**
+```typescript
+// ✅ DO: Always use Task Master MCP for task operations
+// Start work session
+mcp_task-master-ai_get_tasks -> mcp_task-master-ai_next_task
+
+// Update progress during development  
+mcp_task-master-ai_update_subtask -> mcp_task-master-ai_set_task_status
+
+// Complete tasks
+mcp_task-master-ai_set_task_status(status: "done")
+```
+
+### **2. Development & Testing Workflow**
+```typescript
+// ✅ DO: Comprehensive testing with Playwright
+mcp_playwright-mcp_browser_navigate -> mcp_playwright-mcp_browser_snapshot
+-> mcp_playwright-mcp_browser_click -> mcp_playwright-mcp_browser_take_screenshot
+
+// ✅ DO: Use browser tools for performance monitoring
+mcp_browser-tools_runPerformanceAudit
+mcp_browser-tools_runAccessibilityAudit
+mcp_browser-tools_runSEOAudit
+```
+
+### **3. Backend Development Workflow**
+```typescript
+// ✅ DO: Use Supabase MCP for all backend operations
+mcp_supabase_list_projects -> mcp_supabase_get_project
+-> mcp_supabase_apply_migration -> mcp_supabase_execute_sql
+
+// ✅ DO: Generate TypeScript types from Supabase
+mcp_supabase_generate_typescript_types
+```
+
+### **4. Documentation & Code Quality**
+```typescript
+// ✅ DO: Use Context7 for accurate, up-to-date documentation
+mcp_context7_resolve-library-id -> mcp_context7_get-library-docs
+
+// ✅ DO: Always specify library versions for accuracy
+// Example: Use "next.js/v15.0.0" instead of just "next.js"
+```
+
+## **Project-Specific MCP Usage**
+
+### **For Frame Inventory Management (Task 4)**
+- Use `mcp_supabase_apply_migration` to create frame tables
+- Use `mcp_supabase_execute_sql` for CRUD operations
+- Use `mcp_playwright-mcp_*` to test frame management UI
+
+### **For Photo Management (Task 7)**
+- Use `mcp_vercel_*` for Vercel Blob integration
+- Use `mcp_supabase_*` for photo metadata storage
+- Use `mcp_browser-tools_*` to monitor upload performance
+
+### **For AR Visualization (Task 10)**
+- Use `mcp_context7_*` to get WebXR documentation
+- Use `mcp_playwright-mcp_*` for testing AR features
+- Use `mcp_browser-tools_runPerformanceAudit` for AR performance
+
+### **For Authentication (Task 2)**
+- Use `mcp_supabase_*` for auth setup and management
+- Use `mcp_playwright-mcp_*` to test auth flows
+- Use `mcp_browser-tools_runBestPracticesAudit` for security
+
+## **MCP Efficiency Best Practices**
+
+### **✅ DO: Parallel MCP Operations**
+```typescript
+// Run multiple independent MCP operations simultaneously
+Promise.all([
+  mcp_supabase_list_tables(),
+  mcp_vercel_getDeployments(),
+  mcp_task-master-ai_get_tasks()
+]);
+```
+
+### **✅ DO: Use Specific MCP Tools for Tasks**
+- **Database work**: Always use `mcp_supabase_*` tools
+- **Testing**: Always use `mcp_playwright-mcp_*` tools  
+- **Task updates**: Always use `mcp_task-master-ai_*` tools
+- **Documentation**: Always use `mcp_context7_*` tools
+
+### **✅ DO: Monitor and Audit**
+```typescript
+// Regular monitoring workflow
+mcp_browser-tools_runAuditMode // Comprehensive auditing
+mcp_browser-tools_getNetworkLogs // Check for API issues
+mcp_supabase_get_logs // Check backend logs
+```
+
+### **❌ DON'T: Manual Operations When MCP Available**
+```typescript
+// ❌ DON'T: Manual database queries in terminal
+// psql -h ... -d ... -c "SELECT * FROM ..."
+
+// ✅ DO: Use Supabase MCP
+mcp_supabase_execute_sql({ query: "SELECT * FROM ..." })
+```
+
+### **❌ DON'T: Skip Testing Automation**
+```typescript
+// ❌ DON'T: Manual browser testing only
+
+// ✅ DO: Automated testing with Playwright MCP
+mcp_playwright-mcp_browser_navigate
+mcp_playwright-mcp_browser_snapshot  
+mcp_playwright-mcp_browser_click
+```
+
+## **Required MCP Tools for Project Completion**
+
+### **Current MCPs (Available)**
+✅ Task Master AI - Task management
+✅ Supabase - Database & Auth  
+✅ Vercel - Deployment
+✅ Playwright - Testing
+✅ Browser Tools - Monitoring
+✅ Context7 - Documentation
+✅ GitHub - Repository management
+
+### **Recommended Additional MCPs from Smithery**
+🔄 **Memory Tool** (`@mem0ai/mem0-memory-mcp`) - For user preferences and context
+🔄 **Desktop Commander** (`@wonderwhy-er/desktop-commander`) - File management and terminal
+🔄 **Exa Search** - Enhanced web search for research
+🔄 **Hyperbrowser** - Advanced web scraping for inspiration/references
+
+## **Emergency Fallbacks**
+- If MCP tools fail, use terminal commands as backup
+- Always verify MCP results with manual testing when critical
+- Document any MCP limitations or bugs encountered
+
+## **Integration Patterns**
+- **Task-driven development**: Start every session with `mcp_task-master-ai_next_task`
+- **Test-driven development**: Use `mcp_playwright-mcp_*` after every major change
+- **Data-driven development**: Use `mcp_supabase_*` for all backend operations
+- **Performance-driven development**: Use `mcp_browser-tools_*` for regular audits

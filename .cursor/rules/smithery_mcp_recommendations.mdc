@@ -1,0 +1,213 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Smithery MCP Recommendations for Photo Wall Planner
+
+## **Priority MCPs to Add from Smithery.ai**
+
+### **🔥 High Priority - Task Management Enhancement**
+
+#### **Memory Tool** (`@mem0ai/mem0-memory-mcp`)
+- **Why**: Store user preferences, layout choices, and context across sessions
+- **Use Cases**: 
+  - Remember user frame preferences for future projects
+  - Store design patterns and user aesthetic choices
+  - Maintain context for AR room setups
+- **Tasks**: All tasks (1-11) - especially useful for Tasks 2, 7, 8, 10
+
+#### **Desktop Commander** (`@wonderwhy-er/desktop-commander`)
+- **Why**: File management for photos, layouts, and project exports
+- **Use Cases**:
+  - Bulk photo operations and file organization
+  - Project file management and exports
+  - Terminal operations for deployment and testing
+- **Tasks**: Tasks 1, 3, 7, 9 (file management heavy tasks)
+
+### **🔄 Medium Priority - Development Enhancement**
+
+#### **Exa Search** (`exa`)
+- **Why**: Research AR frameworks, photo processing libraries, layout algorithms
+- **Use Cases**:
+  - Research WebXR implementations (Task 10)
+  - Find layout algorithm examples (Task 5)
+  - Photo processing and computer vision libraries (Task 7)
+- **Tasks**: Tasks 5, 7, 8, 10 (research-heavy tasks)
+
+#### **Hyperbrowser** (`@hyperbrowserai/mcp`)
+- **Why**: Scrape photo wall inspiration and design patterns
+- **Use Cases**:
+  - Gather layout inspiration from design websites
+  - Extract frame arrangement patterns
+  - Research AR/VR implementation examples
+- **Tasks**: Tasks 5, 6, 8, 10 (design and visualization tasks)
+
+### **🎯 Specialized - Project Specific**
+
+#### **Notion** (`@smithery/notion`)
+- **Why**: Project documentation and design system management
+- **Use Cases**:
+  - Design system documentation
+  - User feedback and testing notes
+  - Project requirements and specifications
+- **Tasks**: All tasks for documentation
+
+#### **Slack** (`@smithery-ai/slack`)
+- **Why**: Team communication and notifications (if working with a team)
+- **Use Cases**:
+  - Build progress notifications
+  - Deployment alerts
+  - Testing results sharing
+- **Tasks**: Tasks 1, 6, 9 (deployment and testing)
+
+## **Updated MCP Configuration**
+
+### **Recommended .cursor/mcp.json Updates**
+
+```json
+{
+  "mcpServers": {
+    // Existing MCPs (keep these)
+    "browser-tools": { "command": "npx", "args": ["@agentdeskai/browser-tools-mcp@1.2.0"] },
+    "context7": { "command": "npx", "args": ["-y", "@upstash/context7-mcp@latest"] },
+    "github": { /* existing config */ },
+    "supabase": { /* existing config */ },
+    "vercel": { /* existing config */ },
+    "playwright-mcp": { /* existing config */ },
+    
+    // NEW: High Priority Additions
+    "memory-tool": {
+      "command": "npx",
+      "args": ["-y", "@mem0ai/mem0-memory-mcp@latest"]
+    },
+    "desktop-commander": {
+      "command": "npx", 
+      "args": ["-y", "@wonderwhy-er/desktop-commander@latest"]
+    },
+    
+    // NEW: Research & Development
+    "exa-search": {
+      "command": "npx",
+      "args": ["-y", "exa@latest"]
+    },
+    "hyperbrowser": {
+      "command": "npx",
+      "args": ["-y", "@hyperbrowserai/mcp@latest"]
+    },
+    
+    // NEW: Documentation & Communication
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@smithery/notion@latest"]
+    }
+  }
+}
+```
+
+## **Task-Specific MCP Usage Patterns**
+
+### **For Missing Frontend Pages (Task 11) - IMMEDIATE**
+```typescript
+// Use Memory Tool to store page design patterns
+memory_tool.store("page_patterns", {
+  layout: "responsive_grid",
+  components: ["header", "navigation", "content", "footer"],
+  styling: "tailwind_css"
+});
+
+// Use Context7 for Next.js 15 documentation
+context7.getLibraryDocs("next.js/v15.0.0", { topic: "app_router" });
+
+// Use Desktop Commander for file operations
+desktop_commander.createFile("app/projects/page.tsx");
+desktop_commander.createFile("app/layouts/page.tsx");
+```
+
+### **For Supabase Setup (Task 1.5, Task 2) - HIGH PRIORITY**
+```typescript
+// Use Supabase MCP for project creation
+mcp_supabase_create_project({
+  name: "photo-wall-planner",
+  organization_id: "vpotxkyyhyxdhxkavsqc"
+});
+
+// Use Memory Tool to store connection details
+memory_tool.store("supabase_config", {
+  project_id: "new_project_id",
+  auth_setup: "email_password",
+  tables: ["users", "projects", "frames", "photos"]
+});
+```
+
+### **For Photo Management (Task 7) - BACKEND FOCUS**
+```typescript
+// Use Exa Search for image processing libraries
+exa_search.search("vercel blob image upload next.js typescript");
+
+// Use Context7 for Vercel Blob documentation
+context7.getLibraryDocs("vercel/blob", { topic: "image_upload" });
+
+// Use Hyperbrowser for inspiration
+hyperbrowser.scrape("unsplash.com/collections/photo-walls");
+```
+
+### **For AR Visualization (Task 10) - RESEARCH HEAVY**
+```typescript
+// Use Exa Search for WebXR resources
+exa_search.search("WebXR wall detection three.js typescript");
+
+// Use Context7 for WebXR documentation
+context7.getLibraryDocs("webxr/api", { topic: "plane_detection" });
+
+// Use Hyperbrowser for AR examples
+hyperbrowser.scrape("immersive-web.github.io/webxr-samples");
+```
+
+## **Implementation Strategy**
+
+### **Phase 1: Essential MCPs (This Week)**
+1. Add **Memory Tool** - Store user preferences and development context
+2. Add **Desktop Commander** - File management for missing pages
+3. Use existing **Supabase MCP** to set up backend
+
+### **Phase 2: Development MCPs (Next Week)**  
+1. Add **Exa Search** - Research AR and photo processing
+2. Add **Hyperbrowser** - Design inspiration gathering
+3. Integrate with existing **Context7** for documentation
+
+### **Phase 3: Documentation MCPs (Later)**
+1. Add **Notion** - Project documentation
+2. Add **Slack** - Team communication (if needed)
+
+## **Benefits of This MCP Stack**
+
+### **✅ Complete Development Coverage**
+- **Frontend**: Context7, Browser Tools, Playwright
+- **Backend**: Supabase, Vercel, Desktop Commander  
+- **Research**: Exa Search, Hyperbrowser
+- **Memory**: Memory Tool for context persistence
+- **Testing**: Playwright, Browser Tools
+- **Documentation**: Context7, Notion
+
+### **✅ Efficient Workflows**
+- All major development tasks covered by MCPs
+- Reduced manual research and setup time
+- Automated testing and monitoring
+- Context preservation across sessions
+
+### **✅ Project-Specific Optimization**
+- AR/VR research capabilities (Exa, Hyperbrowser)
+- Photo processing and management (Vercel, Supabase)
+- Design system and layout tools (Memory, Context7)
+- Complete testing coverage (Playwright, Browser Tools)
+
+## **Next Steps**
+
+1. **Install Priority MCPs**: Add Memory Tool and Desktop Commander first
+2. **Configure Environment Variables**: Ensure API keys are set for new MCPs
+3. **Update Cursor Rules**: Reference new MCPs in development workflows
+4. **Test Integration**: Verify all MCPs work with current project setup
+5. **Document Patterns**: Create specific usage patterns for each task
+
+This MCP stack will provide comprehensive coverage for all 11 tasks in your photo wall planner project, with particular strength in the high-priority areas: frontend pages, Supabase integration, and AR development.
